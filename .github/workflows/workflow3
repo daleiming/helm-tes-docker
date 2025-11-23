@@ -1,0 +1,24 @@
+name: w3 upload
+
+on:
+  workflow_dispatch:
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download docker image
+        run: |
+          docker pull apache/kafka:4.1.1
+          docker save -o kafka-4.1.1.tar apache/kafka:4.1.1
+
+      - name: Create Release and Upload Asset
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: kafka-4.1.1
+          name: Kafka 4.1.1 Docker Image
+          body: Docker image for Apache Kafka 4.1.1
+          files: kafka-4.1.1.tar
+          token: ${{ secrets.GITHUB_TOKEN }}
