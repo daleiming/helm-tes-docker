@@ -1,4 +1,4 @@
-name: Upload with Minimal Checkout
+name: Upload w2
 
 on:
   workflow_dispatch:
