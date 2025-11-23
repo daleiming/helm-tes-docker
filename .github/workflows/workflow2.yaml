@@ -2,10 +2,11 @@ name: Upload w2
 
 on:
   workflow_dispatch:
-
 jobs:
   upload:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout empty tree
         uses: actions/checkout@v4
