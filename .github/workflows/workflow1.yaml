@@ -1,0 +1,38 @@
+name: Pull Kafka Images
+
+on:
+  workflow_dispatch:
+
+jobs:
+  pull-images:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Set up Docker
+      uses: docker/setup-buildx-action@v3
+
+    - name: Pull Kafka Docker images
+      run: |
+        # 拉取实际的 Kafka Docker 镜像（不是 chart）
+        docker pull bitnami/kafka:3.7.0
+        docker pull bitnami/zookeeper:3.9.2
+        
+        # 保存镜像为 tar 文件
+        docker save -o kafka-3.7.0.tar bitnami/kafka:3.7.0
+        docker save -o zookeeper-3.9.2.tar bitnami/zookeeper:3.9.2
+
+    - name: Configure Git
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+
+    - name: Commit and push
+      run: |
+        git add .
+        git commit -m "chore: update Kafka Docker images" || echo "No changes to commit"
+        git push
