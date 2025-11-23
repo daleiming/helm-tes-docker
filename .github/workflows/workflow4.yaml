@@ -19,6 +19,7 @@ jobs:
         with:
           tag: kafka-4.1.1
           name: Kafka 4.1.1 Docker Image
+          allowUpdates: true
           body: |
             Docker image for Apache Kafka 4.1.1
             
