@@ -1,0 +1,34 @@
+
+name: Download helm and Upload to Releases
+
+on:
+  workflow_dispatch:
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download Helm Chart
+        run: |
+          # 拉取 chart
+          helm pull oci://registry-1.docker.io/bitnamicharts/kafka --version 32.4.3
+
+      - name: Create Release and Upload Asset
+        uses: ncipollo/release-action@v1
+        with:
+          tag: kafka-helm-32.4.3
+          name: Kafka helm 32.4.3
+          allowUpdates: true
+          body: |
+            Bitnami package for Apache Kafka 
+            
+            **Load image:**
+            ```bash
+            helm repo add bitnami https://charts.bitnami.com/bitnami
+            helm install my-kafka bitnami/kafka --version 32.4.3
+            helm pull oci://registry-1.docker.io/bitnamicharts/kafka --version 32.4.3
+            ```
+          artifacts: "kafka-32.4.3.tgz"
+          token: ${{ secrets.GITHUB_TOKEN }}
